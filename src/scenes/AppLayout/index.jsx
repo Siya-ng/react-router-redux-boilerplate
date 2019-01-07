@@ -1,6 +1,7 @@
-import React, { Component } from ' react';
-
+import React, { Component } from 'react';
 import Header from '../../components/Header';
+import './bootstrap.css';
+import './main.css';
 
 class AppLayout extends Component {
   render() {

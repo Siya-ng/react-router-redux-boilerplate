@@ -1,25 +1,47 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { HashRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { all, fork } from 'redux-saga/effects';
+
+import Routes from './routes';
+// import StoreProvider from "./services/storeProvider"
+
+
+import { createStore, applyMiddleware, compose, combineReducers } from "redux";
+import createSagaMiddleware from "redux-saga";
+import commonReducers from "./services/reducers";
+import commonSagas from "./services/sagas";
+
+const configureSaga = sagas => function* configureSagaGenerator() {
+  yield all(sagas.map(saga => fork(saga)));
+};
+// create the saga middleware
+const sagaMiddleware = createSagaMiddleware();
+
+// dev tools middleware
+const reduxDevTools =
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+
+// create a redux store with our reducer above and middleware
+let store = createStore(
+  combineReducers({ ...commonReducers }),
+  compose(applyMiddleware(sagaMiddleware), reduxDevTools)
+);
+
+// run the saga
+sagaMiddleware.run(configureSaga([...commonSagas]));
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Eit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <Provider store={store}>
+        <HashRouter>
+          <Routes />
+        </HashRouter>
+      </Provider>
+
       </div>
     );
   }
