@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
 import {
   Navbar,
   Nav,
@@ -9,16 +11,15 @@ import {
   Collapse,
   NavbarBrand,
 } from 'reactstrap';
-import styles from './styles';
 
 class Header extends React.Component {
-  // static contextTypes = {
-  //   router: PropTypes.shape({
-  //     history: PropTypes.shape({
-  //       push: PropTypes.func.isRequired,
-  //     }).isRequired,
-  //   }).isRequired,
-  // }
+  static contextTypes = {
+    router: PropTypes.shape({
+      history: PropTypes.shape({
+        push: PropTypes.func.isRequired,
+      }).isRequired,
+    }).isRequired,
+  }
   constructor(props) {
     super(props);
 
@@ -40,24 +41,46 @@ class Header extends React.Component {
     }
   }
 
+  signOut = (e) => {
+    e.preventDefault();
+    localStorage.clear();
+    this.context.router.history.push('/');
+    this.props.signout();
+  }
+
   render() {
+    const {
+      isAuthenticated,
+    } = this.props.Auth;
+
     // const currentRoute = this.context.router.route.location.pathname;
     return (
+      
       <div>
-        <Navbar light expand="md" style={styles.header} className='navbar-toggler-light'>
-          <NavbarBrand href="/">reactstrap</NavbarBrand>
-          <NavbarToggler onClick={this.toggle} />
+        <Navbar light expand="md" className='navbar-toggler-light'>
+          <NavbarBrand href="/">Home</NavbarBrand>
+          <NavbarToggler onClick={this.toggle} className="mr-2"/>
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto mr-md-4" navbar>
               <NavItem >
                 <Link to="/" onClick={this.toggleNavbar}>Home</Link>
               </NavItem>
-              <NavItem>
-                <Link to="sign-in" onClick={this.toggleNavbar}>Sign In</Link>
-              </NavItem>
-              <NavItem>
-                <Link to="/sign-up" onClick={this.toggleNavbar}>Sign Up</Link>
-              </NavItem>
+              {isAuthenticated ? (
+                <NavItem>
+                  <Link to="/" onClick={this.signOut}>Sign Out</Link>
+                </NavItem>
+              ) : (
+                <Fragment>
+                  <NavItem>
+                    <Link to="sign-in" onClick={this.toggleNavbar}>Sign In</Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link to="/sign-up" onClick={this.toggleNavbar}>Sign Up</Link>
+                  </NavItem>
+                </Fragment>
+              ) }
+
+
               {/* <NavItem active={currentRoute === '/partnership'}>
                 <Link to="/partnership" onClick={this.toggleNavbar}></Link>
               </NavItem>
@@ -72,4 +95,12 @@ class Header extends React.Component {
   }
 }
 
-export default Header;
+const mapStateToProps = state => ({
+  Auth : state.Auth,
+})
+
+const mapDispatchToProps = dispatch => ({
+  signout: () => dispatch({ type: 'AUTH_SIGNOUT' }),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

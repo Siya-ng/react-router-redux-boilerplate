@@ -64,7 +64,8 @@ class LoginForm extends Component {
       hasSubmitted: true,
       errors: {},
     });
-    const params = {cemail: this.state.email, password: this.state.passwordc}
+
+    const params = { email: this.state.email, password: this.state.password }
     this.props.login(params)
     this.setState({
       email: '',

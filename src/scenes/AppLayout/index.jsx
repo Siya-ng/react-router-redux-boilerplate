@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+
 import './bootstrap.css';
 import './main.css';
 
@@ -9,6 +11,7 @@ class AppLayout extends Component {
       <div className="AppLayout">
         <Header />
         {this.props.children}
+        <Footer />
       </div>  
     )
   }

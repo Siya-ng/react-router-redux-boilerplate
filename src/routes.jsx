@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
+import requireAuth from './components/RequireAuth';
 
 
 import AppLayout from './scenes/AppLayout';
