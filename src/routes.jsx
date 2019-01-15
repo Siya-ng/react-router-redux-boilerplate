@@ -4,8 +4,8 @@ import requireAuth from './components/RequireAuth';
 
 
 import AppLayout from './scenes/AppLayout';
-import RegisterForm from './scenes/RegisterForm';
-import LoginForm from './scenes/LoginForm';
+import Register from './scenes/Register';
+import Login from './scenes/Login';
 
 export default class Routes extends Component {
   render() {
@@ -13,8 +13,9 @@ export default class Routes extends Component {
       <AppLayout>
         <Switch>
           <Route exact path="/" />
-          <Route exact path="/sign-up" component={RegisterForm}/>
-          <Route exact path="/sign-in" component={LoginForm}/>
+          <Route exact path="/sign-up" component={Register}/>
+          <Route exact path="/sign-in" component={Login}/>
+          <Route exact path="/test" component={requireAuth(Register)} />
         </Switch>
       </AppLayout>
     )

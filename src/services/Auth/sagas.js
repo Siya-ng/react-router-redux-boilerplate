@@ -47,6 +47,7 @@ function* login(action) {
   }
 }
 
+
 function* register(action) {
   try {
 
